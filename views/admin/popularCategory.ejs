@@ -1,0 +1,67 @@
+<%- include('partials/header')%>
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+        <!-- partial -->
+
+  <!-- Top 10 Best-Selling Categories -->
+  <section class="top-categories">
+    <h2>Top 10 Best-Selling Categories</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Total Quantity Sold</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% topCategories.forEach(category => { %>
+                <tr>
+                    <td><%= category.categoryName %></td>
+                    <td><%= category.totalQuantitySold %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('partials/footer')%>

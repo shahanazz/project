@@ -1,0 +1,77 @@
+<%- include('partials/header')%>
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+        <!-- partial -->
+
+  
+        <!-- Top 10 Best-Selling Products -->
+        <section class="top-products">
+            <h2>Top 10 Best-Selling Products</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>image</th>
+                        <th>Product Name</th>
+                        <th>Total Quantity Sold</th>
+                        <th>Product left</th>
+                        <!-- <th>Total Revenue</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% topProducts.forEach(product => { %>
+                        <tr>
+                            <td>  <% if (product.image && product.image.length > 0) { %>
+                                <img src="/productImages/<%= product.image[0] %>" alt="image" style="width: 100px; height: auto;">
+                            <% } else { %>
+                                No Image
+                            <% } %></td>
+                            <td><%= product.productName %></td>  
+                            <td><%= product.totalQuantity %></td>
+                            <td><%= product.availableQuantity  %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+
+<%- include('partials/footer')%>

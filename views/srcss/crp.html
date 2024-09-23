@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Product Images</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+  <style>
+    .page {
+      margin: 1em auto;
+      max-width: 768px;
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      height: 100%;
+    }
+
+    .box {
+      padding: 0.5em;
+      width: 100%;
+      margin: 0.5em;
+    }
+
+    .box-2 {
+      padding: 0.5em;
+      width: calc(100% / 2 - 1em);
+    }
+
+    .options label,
+    .options input {
+      width: 4em;
+      padding: 0.5em 1em;
+    }
+
+    .btn {
+      background: white;
+      color: black;
+      border: 1px solid black;
+      padding: 0.5em 1em;
+      text-decoration: none;
+      margin: 0.8em 0.3em;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h2>Upload, Crop, and Save Product Images</h2>
+
+    <!-- Input files -->
+    <div class="box">
+      <input type="file" id="file-input-1">
+      <input type="file" id="file-input-2">
+      <input type="file" id="file-input-3">
+    </div>
+
+    <!-- Cropping sections -->
+    <div id="crop-section-1" class="crop-section">
+      <div class="box-2">
+        <div class="result"></div>
+      </div>
+      <div class="box-2 img-result hide">
+        <img class="cropped" src="" alt="">
+      </div>
+      <div class="box">
+        <div class="options hide">
+          <label> Width</label>
+          <input type="number" class="img-w" value="300" min="100" max="1200" />
+        </div>
+        <button class="btn save hide">Save</button>
+        <a href="" class="btn download hide">Download</a>
+      </div>
+    </div>
+
+    <div id="crop-section-2" class="crop-section">
+      <div class="box-2">
+        <div class="result"></div>
+      </div>
+      <div class="box-2 img-result hide">
+        <img class="cropped" src="" alt="">
+      </div>
+      <div class="box">
+        <div class="options hide">
+          <label> Width</label>
+          <input type="number" class="img-w" value="300" min="100" max="1200" />
+        </div>
+        <button class="btn save hide">Save</button>
+        <a href="" class="btn download hide">Download</a>
+      </div>
+    </div>
+
+    <div id="crop-section-3" class="crop-section">
+      <div class="box-2">
+        <div class="result"></div>
+      </div>
+      <div class="box-2 img-result hide">
+        <img class="cropped" src="" alt="">
+      </div>
+      <div class="box">
+        <div class="options hide">
+          <label> Width</label>
+          <input type="number" class="img-w" value="300" min="100" max="1200" />
+        </div>
+        <button class="btn save hide">Save</button>
+        <a href="" class="btn download hide">Download</a>
+      </div>
+    </div>
+
+    <!-- Submit all images -->
+    <button class="btn submit-all hide">Submit All</button>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <script>
+    const sections = [1, 2, 3];
+    const croppers = {};
+
+    sections.forEach(section => {
+      let result = document.querySelector(`#crop-section-${section} .result`),
+          img_result = document.querySelector(`#crop-section-${section} .img-result`),
+          img_w = document.querySelector(`#crop-section-${section} .img-w`),
+          save = document.querySelector(`#crop-section-${section} .save`),
+          cropped = document.querySelector(`#crop-section-${section} .cropped`),
+          dwn = document.querySelector(`#crop-section-${section} .download`),
+          upload = document.querySelector(`#file-input-${section}`),
+          options = document.querySelector(`#crop-section-${section} .options`);
+
+      upload.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (e.target.result) {
+              let img = document.createElement('img');
+              img.id = `image-${section}`;
+              img.src = e.target.result;
+              result.innerHTML = '';
+              result.appendChild(img);
+              save.classList.remove('hide');
+              options.classList.remove('hide');
+              croppers[section] = new Cropper(img);
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+
+      save.addEventListener('click', (e) => {
+        e.preventDefault();
+        let imgSrc = croppers[section].getCroppedCanvas({
+          width: img_w.value
+        }).toDataURL();
+        cropped.classList.remove('hide');
+        img_result.classList.remove('hide');
+        cropped.src = imgSrc;
+        dwn.classList.remove('hide');
+        dwn.download = `imagename-${section}.png`;
+        dwn.setAttribute('href', imgSrc);
+
+        document.querySelector('.submit-all').classList.remove('hide');
+      });
+    });
+
+    document.querySelector('.submit-all').addEventListener('click', (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      
+      sections.forEach(section => {
+        let imgSrc = croppers[section].getCroppedCanvas().toDataURL();
+        formData.append('files', dataURLtoBlob(imgSrc), `product-${section}.png`);
+      });
+
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      }).then(response => response.json())
+        .then(data => {
+          console.log(data);
+          alert('Images uploaded successfully!');
+        }).catch(error => {
+          console.error(error);
+          alert('Failed to upload images.');
+        });
+    });
+
+    function dataURLtoBlob(dataURL) {
+      let parts = dataURL.split(','), mime = parts[0].match(/:(.*?);/)[1],
+          bstr = atob(parts[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], {type:mime});
+    }
+  </script>
+</body>
+</html>

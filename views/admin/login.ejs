@@ -1,0 +1,88 @@
+<%- include('partials/header')%>
+<style>
+   .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+</style>
+
+<body>
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+          <div class="row w-100 mx-0">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                <!-- <div class="brand-logo">
+                  <img src="../../assets/images/logo.svg" alt="logo">
+                </div> -->
+                <h4>Hello! let's get started</h4>
+                <h6 class="fw-light">Login to continue.</h6>
+
+                <%
+                if(typeof message !== 'undefined'){
+                  %>
+                  <h4><%= message %> </h4>
+                  <%
+                }
+                 %>
+                 <form class="pt-3" action="" method="post" id="loginForm">
+                  <div class="form-group">
+                      <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="Email" value="shahanazz193@gmail.com">
+                      <div id="emailError" class="error-message"></div>
+                  </div>
+
+                  <div class="form-group">
+                      <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password" value="Shahanas123!">
+                      <div id="passwordError" class="error-message"></div>
+                  </div>
+
+                  <div class="mt-3 d-grid gap-2">
+                      <button type="submit" class="btn btn-block btn-primary btn-lg fw-medium auth-form-btn">LOG IN</button>
+                  </div>
+                  <div class="my-2 d-flex justify-content-between align-items-center">
+                      <div class="form-check">
+                          <label class="form-check-label text-muted">
+                              <input type="checkbox" class="form-check-input"> Keep me signed in
+                          </label>
+                      </div>
+                      <a href="#" class="auth-link text-black">Forgot password?</a>
+                  </div>
+                  <div class="mb-2 d-grid gap-2">
+                      <!-- <button type="button" class="btn btn-block btn-facebook auth-form-btn">
+                      <i class="ti-facebook me-2"></i>Connect using facebook </button> -->
+                  </div>
+                  <div class="text-center mt-4 fw-light"> Don't have an account? <a href="register.html" class="text-primary">Create</a>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- container-scroller -->
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+      const emailId = document.getElementById('email').value;
+      const passwordId = document.getElementById('password').value;
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+
+      emailError.innerHTML = ''; // Clear previous error messages
+      passwordError.innerHTML = ''; // Clear previous error messages
+
+      if (!emailId || !passwordId) {
+          event.preventDefault(); // Prevent form submission
+          
+          if (!emailId) {
+              emailError.innerHTML = 'Email is required.';
+          }
+
+          if (!passwordId) {
+              passwordError.innerHTML = 'Password is required.';
+          }
+      }
+  });
+</script>
+
+    <%- include('partials/footer')%>

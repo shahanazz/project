@@ -1,0 +1,73 @@
+<%- include('partials/header')%>
+
+<%- include('partials/navbar')%>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+      <!-- Start Banner Area -->
+ <section class="banner-area organic-breadcrumb">
+  <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+          <div class="col-first">
+              <h1>Order history</h1>
+              <nav class="d-flex align-items-center">
+                  <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                  <a href="category.html">Order history</a>
+              </nav>
+          </div>
+      </div>
+  </div>
+</section>
+<!-- End Banner Area -->
+<br>
+        <div class="row mt-5">
+            <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>total</th>
+                            <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for (let order of orderlist) { %>
+                          <% for (let item of order.products) { %>
+                            <tr>
+                              <td>
+                                <a href="/singleProduct/<%= item.productId._id %>">
+                                  <img style="width:100px; height: auto;border-radius: 0;" src="/productImages/<%= item.productId.image[0] %>" alt="">
+                                </a>
+                              </td>
+                              <td><%= item.productId.productname %></td>
+                              <td><%= item.productId.saleprice %></td>
+                              <td><%= item.quantity %></td>
+                              <td><%= item.price %></td>
+                              <td><%= order.orderStatus %></td>
+                              <td class="btn btn-secondary">
+                                <a href="/orderDetails" style="text-decoration: none; color: white;">Details</a>
+                            </td>
+                            
+                            </tr>
+                          <% } %>
+                        <% } %>
+                      </tbody>
+                      
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <%- include('partials/footer')%>

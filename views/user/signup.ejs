@@ -1,0 +1,309 @@
+<%- include('partials/header')%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.75rem;
+        display: none;
+    }
+
+    .show-hide {
+        cursor: pointer;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+    }
+
+    .input-container {
+        position: relative;
+    }
+    .google-login {
+    margin-top: 20px;
+}
+
+.btn-google {
+    background-color: #23681c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-google:hover {
+    background-color: #c23321;
+}
+
+.btn-google i {
+    font-size: 1.2rem;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+form {
+    max-width: 300px;
+    margin: auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.star-rating {
+    display: flex;
+    direction: row-reverse;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #f5c518;
+    cursor: pointer;
+}
+
+.star-rating input:checked ~ label {
+    color: #f5f4ef;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #d1d0cb;
+}
+
+</style>
+<%- include('partials/navbar')%>
+
+<!--================Login Box Area =================-->
+<section class="login_box_area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3>Create Account</h3>
+                    <% if (typeof message !== 'undefined') { %>
+                    <h4><%= message %> </h4>
+                    <% } %>
+                    <form class="row login_form" action="/signup" method="post" id="contactForm" novalidate="novalidate">
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="name" name="username" placeholder="Name"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'">
+                            <div id="error1" class="error-message"></div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                            <div id="error2" class="error-message"></div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="mobile" name="mobile"
+                                placeholder="Mobile Number" onfocus="this.placeholder = ''"
+                                onblur="this.placeholder = 'Mobile Number'">
+                            <div id="error3" class="error-message"></div>
+                        </div>
+
+                        <div class="col-md-12 form-group input-container">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                            <i class="fas fa-eye show-hide" id="togglePassword"></i>
+                            <div id="error4" class="error-message"></div>
+                        </div>
+
+                        <div class="col-md-12 form-group input-container">
+                            <input type="password" class="form-control" id="cpassword" name="cpassword"
+                                placeholder="Confirm Password" onfocus="this.placeholder = ''"
+                                onblur="this.placeholder = 'Confirm Password'">
+                            <i class="fas fa-eye show-hide" id="toggleCPassword"></i>
+                            <div id="error5" class="error-message"></div>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <p>Earn cash rewards by sharing your referral code with friends!</p>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5"><label for="star5" class="star">&#9733;</label>
+                                <input type="radio" id="star4" name="rating" value="4"><label for="star4" class="star">&#9733;</label>
+                                <input type="radio" id="star3" name="rating" value="3"><label for="star3" class="star">&#9733;</label>
+                                <input type="radio" id="star2" name="rating" value="2"><label for="star2" class="star">&#9733;</label>
+                                <input type="radio" id="star1" name="rating" value="1"><label for="star1" class="star">&#9733;</label>
+                            </div>
+                            <input type="text" class="form-control" id="referal" name="referalCode" placeholder="Referal Code"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'referal'">
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="primary-btn">Sign Up</button>
+                            <!-- <a href="#">Forgot Password?</a> -->
+                        </div>
+                    </form>
+
+                    <div class="google-login">
+                        <a href="/auth/google" class="btn btn-google">
+                            <i class="fab fa-google me-2"></i> Login with Google
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <img class="img-fluid" src="/user/img/login.jpg" alt="">
+                    <div class="hover">
+                        <h4>Already Registered?</h4>
+                        <p>If you are already registered, then please login your account here</p>
+                        <a class="primary-btn" href="/login">Login to your Account</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        
+    </div>
+</section>
+<!--================End Login Box Area =================-->
+
+<script>
+    const nameId = document.getElementById('name');
+    const emailId = document.getElementById('email');
+    const phoneId = document.getElementById('mobile');
+    const passwordId = document.getElementById('password');
+    const cPasswordId = document.getElementById('cpassword');
+    const error1 = document.getElementById('error1');
+    const error2 = document.getElementById('error2');
+    const error3 = document.getElementById('error3');
+    const error4 = document.getElementById('error4');
+    const error5 = document.getElementById('error5');
+    const signupForm = document.getElementById('contactForm');
+
+    const togglePassword = document.getElementById('togglePassword');
+    const toggleCPassword = document.getElementById('toggleCPassword');
+
+    function nameValidateChecking() {
+        const nameVal = nameId.value;
+        const namePattern = /^[A-Za-z\s]+$/;
+        if (nameVal.trim() === '') {
+            error1.style.display = 'block';
+            error1.innerHTML = 'Please enter a valid name';
+        } else if (!namePattern.test(nameVal)) {
+            error1.style.display = 'block';
+            error1.innerHTML = 'Name can contain only alphabets and spaces';
+        } else {
+            error1.style.display = 'none';
+            error1.innerHTML = '';
+        }
+    }
+
+    function emailValidateChecking() {
+        const emailVal = emailId.value;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (emailVal.trim() === '') {
+            error2.style.display = 'block';
+            error2.innerHTML = 'Please enter a valid email';
+        } else if (!emailPattern.test(emailVal)) {
+            error2.style.display = 'block';
+            error2.innerHTML = 'Invalid email format';
+        } else {
+            error2.style.display = 'none';
+            error2.innerHTML = '';
+        }
+    }
+
+    function mobileValidateChecking() {
+        const phoneVal = phoneId.value;
+
+        if (phoneVal.trim() === '') {
+            error3.style.display = 'block';
+            error3.innerHTML = 'Enter a valid phone number';
+        } else if (phoneVal.length !== 10) {
+            error3.style.display = 'block';
+            error3.innerHTML = 'Enter 10 digits';
+        } else {
+            error3.style.display = 'none';
+            error3.innerHTML = '';
+        }
+    }
+
+    function passwordValidateChecking() {
+        const passVal = passwordId.value;
+        const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const cPassVal = cPasswordId.value;
+
+        if (passVal.length < 8) {
+            error4.style.display = 'block';
+            error4.innerHTML = 'Should contain at least 8 characters';
+        } else if (!passPattern.test(passVal)) {
+            error4.style.display = 'block';
+            error4.innerHTML = 'Should contain numbers, alphabets, and special characters';
+        } else {
+            error4.style.display = 'none';
+            error4.innerHTML = '';
+        }
+
+        if (passVal !== cPassVal) {
+            error5.style.display = 'block';
+            error5.innerHTML = 'Passwords do not match';
+        } else {
+            error5.style.display = 'none';
+            error5.innerHTML = '';
+        }
+    }
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordId.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordId.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    toggleCPassword.addEventListener('click', function () {
+        const type = cPasswordId.getAttribute('type') === 'password' ? 'text' : 'password';
+        cPasswordId.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        nameId.addEventListener('blur', nameValidateChecking);
+        emailId.addEventListener('blur', emailValidateChecking);
+        phoneId.addEventListener('blur', mobileValidateChecking);
+        passwordId.addEventListener('blur', passwordValidateChecking);
+        cPasswordId.addEventListener('blur', passwordValidateChecking);
+
+        signupForm.addEventListener('submit', function (e) {
+            nameValidateChecking();
+            emailValidateChecking();
+            mobileValidateChecking();
+            passwordValidateChecking();
+
+            if (error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML || error5.innerHTML) {
+                e.preventDefault();
+            }
+        });
+    });
+
+   
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnGoogle = document.querySelector('.btn-google');
+
+        btnGoogle.addEventListener('click', function () {
+            // Implement Google OAuth logic here
+            // Redirect to Google OAuth endpoint or use a library like Firebase Authentication
+        });
+    });
+
+
+</script>
+
+<%- include('partials/footer')%>

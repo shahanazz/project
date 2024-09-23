@@ -1,0 +1,288 @@
+<%- include('partials/header')%>
+
+
+
+<style>
+    .billing-form .form-control {
+      color: #000!important;
+      font-weight: 500;
+    }
+  </style>
+  
+  <%- include('partials/navbar')%>
+
+
+ <!-- Start Banner Area -->
+ <section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Add address</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="category.html">add Address</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<br>
+
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-10 ftco-animate">
+        <div id="errorMessages"></div>
+        <form action="/addAddress" method="post" class="billing-form" id="addressForm">
+          <h3 class="mb-4 billing-heading">Address Details</h3>
+        
+          <div class="row align-items-end">
+              <div class="w-100"></div>
+              <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="firstname">Name</label>
+                    <input type="text" id="name" name="username" class="form-control" placeholder="" value="<%=user.username%>">
+                  </div>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="text" id="mobile" name="mobile" class="form-control" placeholder="" value="<%=user.mobile%>">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="emailaddress">Email Address</label>
+                  <input type="text" id="email" name="email" class="form-control" placeholder="" value="<%=user.email%>">
+                </div>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="streetaddress">House Name</label>
+                    <input type="text" id="houseName" name="houseName" class="form-control" placeholder="House number and street name">
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="streetaddress">Landmark</label>    
+                    <input type="text" id="landmark" name="landmark" class="form-control" placeholder="Apartment, suite, unit etc: (optional)">
+                  </div>
+              </div>
+
+              <div class="w-100"></div>
+              
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="towncity">City</label>
+                    <input type="text" id="city" name="city" class="form-control" placeholder="">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="towncity">State</label>
+                    <input type="text" id="state" name="state" class="form-control" placeholder="">
+                  </div>
+                </div>
+
+                <div class="w-100"></div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="country">Country</label>
+                      <input type="text" id="country" name="country" class="form-control" placeholder="">
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="postcodezip">Postcode / ZIP *</label>
+                      <input type="text" id="pincode" name="pincode" class="form-control" placeholder="">
+                  </div>
+                </div>
+           
+              <div class="w-100"></div>
+              <div class="col-md-12">
+                <div class="form-group mt-4">
+                  <button type="submit" class="btn btn-primary btn-sm mr-3" style="width: 100px; height: 50px;">Update</button>
+                </div>
+              </div>
+          </div>
+        </form>
+        <div id="errorMessages"></div>
+      </div>
+    </div>
+  </div>
+</section> 
+
+<script>
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const form = document.getElementById("addressForm");
+  //   const errorMessages = document.getElementById("errorMessages");
+
+  //   form.addEventListener("submit", function (event) {
+  //     event.preventDefault(); // Prevent the form from submitting by default
+
+  //     console.log("Validation function is executing."); 
+  //     // Get input values
+  //     const name = document.getElementById("name").value.trim();
+  //     const mobile = document.getElementById("mobile").value.trim();
+  //     const email = document.getElementById("email").value.trim();
+  //     const landmark = document.getElementById("landmark").value.trim();
+  //     const houseName = document.getElementById("houseName").value.trim();
+  //     const city = document.getElementById("city").value.trim();
+  //     const state = document.getElementById("state").value.trim();
+  //     const country = document.getElementById("country").value.trim();
+  //     const pincode = document.getElementById("pincode").value.trim();
+
+  //     // Clear previous error messages
+  //     errorMessages.innerHTML = "";
+
+  //     // Perform validation
+  //     if (name === "" || mobile === "" || email === "" || landmark === "" || houseName === "" || city === "" || state === "" || country === "" || pincode === "") {
+  //       showError("Please fill in all required fields.");
+  //       return;
+  //     }
+
+  //     // Validate email using regex
+  //     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  //     if (!email.match(emailPattern)) {
+  //       showError("Invalid email format");
+  //       return;
+  //     }
+
+  //     // Validate mobile number using regex
+  //     const mobilePattern = /^\d{10}$/;
+  //     if (!mobile.match(mobilePattern)) {
+  //       showError("Mobile number must be 10 digits");
+  //       return;
+  //     }
+
+  //     // Add more validation for other fields as needed
+
+  //     // If all validation passes, you can submit the form
+  //     form.submit();
+  //   });
+
+  //   function showError(message) {
+  //     const errorMessage = document.createElement("div");
+  //     errorMessage.textContent = message;
+  //     errorMessage.classList.add("alert", "alert-danger");
+  //     errorMessages.appendChild(errorMessage);
+  //   }
+  // });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("addressForm");
+    const errorMessages = document.getElementById("errorMessages");
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the form from submitting by default
+
+        console.log("Validation function is executing.");
+
+        // Get input values
+        const name = document.getElementById("name").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const landmark = document.getElementById("landmark").value.trim();
+        const houseName = document.getElementById("houseName").value.trim();
+        const city = document.getElementById("city").value.trim();
+        const state = document.getElementById("state").value.trim();
+        const country = document.getElementById("country").value.trim();
+        const pincode = document.getElementById("pincode").value.trim();
+
+        // Clear previous error messages
+        errorMessages.innerHTML = "";
+
+        // Perform validation checks
+
+        // Check for empty fields
+        if (!name || !mobile || !email || !landmark || !houseName || !city || !state || !country || !pincode) {
+            showError("Please fill in all required fields.");
+            return;
+        }
+
+        // Validate name (alphabet only, 2-50 characters)
+        const namePattern = /^[A-Za-z\s]{2,50}$/;
+        if (!name.match(namePattern)) {
+            showError("Name must contain only alphabets and be 2 to 50 characters long.");
+            return;
+        }
+
+        // Validate email using regex (standard email pattern)
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!email.match(emailPattern)) {
+            showError("Invalid email format.");
+            return;
+        }
+
+        // Validate mobile number (10 digits)
+        const mobilePattern = /^\d{10}$/;
+        if (!mobile.match(mobilePattern)) {
+            showError("Mobile number must be exactly 10 digits.");
+            return;
+        }
+
+
+        // Validate landmark (minimum 5 characters)
+        if (landmark.length < 5) {
+            showError("Landmark must be at least 5 characters long.");
+            return;
+        }
+
+        // Validate house name (minimum 2 characters)
+        if (houseName.length < 2) {
+            showError("House name must be at least 2 characters long.");
+            return;
+        }
+
+        // Validate city (alphabet only, 2-50 characters)
+        const cityPattern = /^[A-Za-z\s]{2,50}$/;
+        if (!city.match(cityPattern)) {
+            showError("City must contain only alphabets and be 2 to 50 characters long.");
+            return;
+        }
+
+        // Validate state (alphabet only, 2-50 characters)
+        const statePattern = /^[A-Za-z\s]{2,50}$/;
+        if (!state.match(statePattern)) {
+            showError("State must contain only alphabets and be 2 to 50 characters long.");
+            return;
+        }
+
+        // Validate country (alphabet only, 2-50 characters)
+        const countryPattern = /^[A-Za-z\s]{2,50}$/;
+        if (!country.match(countryPattern)) {
+            showError("Country must contain only alphabets and be 2 to 50 characters long.");
+            return;
+        }
+
+        // Validate pincode (5 or 6 digits, depending on country)
+        const pincodePattern = /^\d{5,6}$/;
+        if (!pincode.match(pincodePattern)) {
+            showError("Pincode must be 5 or 6 digits.");
+            return;
+        }
+
+        // If all validation passes, submit the form
+        form.submit();
+    });
+
+    // Function to display error messages
+    function showError(message) {
+        const errorMessage = document.createElement("div");
+        errorMessage.textContent = message;
+        errorMessage.classList.add("alert", "alert-danger");
+        errorMessages.appendChild(errorMessage);
+    }
+});
+
+</script>
+
+
+  <%- include('partials/footer')%>

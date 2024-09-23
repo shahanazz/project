@@ -1,0 +1,110 @@
+<%- include('partials/header')%>
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+           
+              <a href="/admin/addProduct"> <button class="btn btn-primary">Add Product</button></a>
+              <br><br>
+              <div class="row">      
+<div class="col-lg-12 grid-margin stretch-card">
+   
+    <div class="card">
+     
+      <div class="card-body">
+        <h4 class="card-title">product List</h4>
+        <p class="card-description"> product details list
+        </p>
+        <div class="table-responsive">
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                    <th>Image</th>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Offer</th>
+                      <th>Stock</th>
+                     
+                      <!-- <th>Action</th> -->
+                  </tr>
+              </thead>
+              <tbody>
+                  <% if(product.length > 0) { %>
+                      <% for(let i = 0; i < product.length; i++) { %>
+                          <tr>
+                              <td class="py-1">
+                                  <img src="/productImages/<%=product[i].image[0]%>" alt="image" />
+                              </td>
+                              <td><%= product[i].productname %></td>
+                              <td><%= product[i].category.category %></td>
+                              <td><%= product[i].saleprice %></td>
+                              <td><%= product[i].productoffer %>%</td>
+                              <td><%= product[i].quantity %></td>
+                              <td class="text-end">
+                                <a href="/admin/editProduct?id=<%= product[i]._id %>" class="btn btn-sm btn-success">Edit</a>
+                                <a href="/admin/deleteProduct/?id=<%= product[i]._id %>" class="btn btn-sm btn-square btn-danger text-danger-hover">
+                                  <i class="bi bi-trash"></i>
+                                </a>
+                              </td>
+                              
+                          </tr>
+                      <% } %>
+                  <% } else { %>
+                      <tr>
+                          <td colspan="5">Products not found</td>
+                      </tr>
+                  <% } %>
+              </tbody>
+          </table>
+      </div>
+<br><br>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Previous</a>
+            </li>
+          <% } %>
+      
+          <% for (let j = 1; j <= totalPages; j++) { %>
+            <li class="page-item <%= (j === currentPage) ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= j %>"><%= j %></a>
+            </li>
+          <% } %>
+      
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+  <%- include('partials/footer')%>  

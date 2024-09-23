@@ -1,0 +1,829 @@
+<%- include('partials/header')%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<style>
+    html, body {
+        /* Default style for root elements */
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .Container {
+        width: 100%;
+        height: 100%;
+       
+        display: flex;
+        justify-content: center; /* Standard align/justify props for cross-browser support */
+        align-items: center;
+    }
+    .ImageWrapper {
+      
+      
+        border-radius: .5rem;
+        padding: .5rem;
+        overflow: hidden;
+    }
+    .AnimatedImage {
+        width: 100%;
+        height: 100%;
+        transform: scale(1);
+        /* background: url(https://avatars0.githubusercontent.com/u/3704156?s=460&v=4) transparent no-repeat center; */
+        background-size: contain;
+        transition: transform .25s cubic-bezier(0.075, 0.82, 0.165, 1);
+        transform-origin: 50% 50%;
+        pointer-events: none;
+    }
+    .ImageWrapper:hover .AnimatedImage { 
+        transform: scale(2);
+    }
+
+	.indicator {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	position: relative;
+	border: 1px #333 solid;
+	animation-name: pulsate;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+}
+
+.indicator--available {
+	width: 12px;
+	height: 12px;
+	background: #0a8a00;
+	border-color: #0a8a00;
+}
+
+.indicator--almost-empty {
+	width: 12px;
+	height: 12px;
+	background: #ffa524;
+	border-color: #ffa524;
+}
+
+.indicator--not-available {
+	border: 1px #e00751 solid;
+}
+
+.indicator--not-available::before {
+	content: "";
+	width: 16px;
+	height: 1px;
+	background: #e00751;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) rotate(45deg);
+	transform-origin: center center;
+	z-index: 1;
+}
+
+.indicator--not-available::after {
+	content: "";
+	width: 35px;
+	height: 6px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) rotate(45deg);
+	transform-origin: center center;
+}
+
+.icon-text {
+	display: flex;
+	align-items: center;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.icon-text__label {
+	font-family: "Noto Sans JP", sans-serif;
+	font-weight: 500;
+	color: #333;
+	margin-left: 10px;
+	position: relative;
+}
+
+.icon-text__label--all-clear {
+	color: #0a8a00;
+}
+
+.icon-text__label--warning {
+	color: #ffa524;
+}
+
+.icon-text__label--error {
+	color: #e00751;
+}
+
+.icon-text__label::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -5px;
+	width: 0;
+	height: 2px;
+	background: transparent;
+	transition: 0.2s ease-in-out;
+	border-radius: 40px;
+}
+
+.icon-text:hover .icon-text__label--all-clear::before {
+	width: 100%;
+	background: #0a8a00;
+}
+
+.icon-text:hover .icon-text__label--warning::before {
+	width: 100%;
+	background: #ffa524;
+}
+
+.icon-text:hover .icon-text__label--error::before {
+	width: 100%;
+	background: #e00751;
+}
+
+@keyframes pulsate {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.3);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+</style>
+
+<body>
+
+	<%- include('partials/navbar')%>
+		
+
+	<!-- Start Banner Area -->
+	<!-- <section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Product Details Page</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="single-product.html">product-details</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section> -->
+	<!-- End Banner Area -->
+
+	<!--================Single Product Area =================-->
+	<div class="product_image_area">
+		<div class="container">
+			<div class="row s_product_inner">
+				<div class="col-lg-6">
+					<div class="s_Product_carousel">
+						<div class="single-prd-item">
+							<div class="Container">
+								<div class="ImageWrapper">
+								  <div class="AnimatedImage">
+							<img class="img-fluid" src="/productImages/<%= product.image[0] %>" alt="">
+								  </div></div> </div>
+						</div>
+						<div class="single-prd-item">
+							<div class="Container">
+								<div class="ImageWrapper">
+								  <div class="AnimatedImage">
+							<img class="img-fluid" src="/productImages/<%= product.image[1] %>" alt="">
+						</div></div> </div>
+						</div>
+						<div class="single-prd-item">
+							<div class="Container">
+								<div class="ImageWrapper">
+								  <div class="AnimatedImage">
+							<img class="img-fluid" src="/productImages/<%= product.image[2] %>" alt="">
+						</div></div> </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-5 offset-lg-1">
+					<% if(product.quantity > 20 ) {%>
+					<div class="icon-text">
+						<span class="icon-text__icon indicator indicator--available"></span>
+						<span class="icon-text__label icon-text__label--all-clear"><%= product.quantity%> products are in stock</span>
+					</div>
+
+					<%} else if(product.quantity < 20 && product.quantity > 0){%>
+					
+					<div class="icon-text">
+						<span class="icon-text__icon indicator indicator--almost-empty"></span>
+						<span class="icon-text__label icon-text__label--warning">Only a few left. Buy now!</span>
+					</div>
+					
+					<%} else if(product.quantity === 0){%>
+					<div class="icon-text">
+						<span class="icon-text__icon indicator indicator--not-available"></span>
+						<span class="icon-text__label icon-text__label--error">out of stock</span>
+					</div>
+					<% } %>
+					<%
+					if(typeof message !== 'undefined'){
+					  %>
+					  <h4><%= message %> </h4>
+					  <%
+					}
+					 %>
+					<div class="s_product_text">
+						<h3><%= product.productname%></h3>
+						
+						
+						<h2>₹ <%= product.saleprice %></h2>
+						<h6 style="text-decoration: line-through; color: #8d8b8b;">₹ <%= product.regularprice + 10 %></h6>
+						<h4 style="color: #396804;">
+							<%= product.productoffer && product.productoffer > 0 ? product.productoffer + '% Offer' : '' %>
+						  </h4>
+						  
+						<br>
+						
+						
+						<ul class="list">
+							<li><a class="active" href="#"><span>Category</span> : <%= product.category.category%></a></li>
+							<li><a class="active" href="#"><span>Brand</span> :   <%= product.brand ? product.brand.brandName : 'No Brand' %></a></li>
+							<li><a href="#"><span>Availibility</span> : <%= product.quantity > 0 ? 'Available' : 'out of stock' %></a> (<%=product.quantity%>)</li>
+						</ul>
+						<p><%= product.description%></p>
+						
+						<form  id="addToCartForm" action="/addToCart/<%= product._id %>" method="post">
+							<div class="product_count">
+								<label for="qty">Quantity:</label>
+								<input type="text" name="quantity" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+								<button onclick="increaseQuantity()" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+								<button onclick="decreaseQuantity()" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+							</div>
+						<div class="card_area d-flex align-items-center">
+							
+								<button class="primary-btn" type="submit">Add to Cart</button>
+							</form>
+							
+						
+							
+							<a class="icon_btn" href="javascript:void(0);" onclick="addToWishlist('<%= product._id %>')"><i class="lnr lnr lnr-heart"></i></a>
+						</div>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--================End Single Product Area =================-->
+
+
+
+	<!--================Product Description Area =================-->
+	<!-- <section class="product_description_area">
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+					 aria-selected="false">Specification</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+					 aria-selected="false">Comments</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+					 aria-selected="false">Reviews</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+					<p>Beryl Cook is one of Britain’s most talented and amusing artists .Beryl’s </p>
+					<p>It is often frustrating to attempt to plan meals that are designed for one. Despite this fact, we are seeing</p>
+				</div>
+				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<td>
+										<h5>Width</h5>
+									</td>
+									<td>
+										<h5>128mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Height</h5>
+									</td>
+									<td>
+										<h5>508mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Depth</h5>
+									</td>
+									<td>
+										<h5>85mm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Weight</h5>
+									</td>
+									<td>
+										<h5>52gm</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Quality checking</h5>
+									</td>
+									<td>
+										<h5>yes</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Freshness Duration</h5>
+									</td>
+									<td>
+										<h5>03days</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>When packeting</h5>
+									</td>
+									<td>
+										<h5>Without touch of hand</h5>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h5>Each Box contains</h5>
+									</td>
+									<td>
+										<h5>60pcs</h5>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="comment_list">
+								<div class="review_item">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-1.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<h5>12th Feb, 2018 at 05:56 pm</h5>
+											<a class="reply_btn" href="#">Reply</a>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+								<div class="review_item reply">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-2.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<h5>12th Feb, 2018 at 05:56 pm</h5>
+											<a class="reply_btn" href="#">Reply</a>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+								<div class="review_item">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-3.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<h5>12th Feb, 2018 at 05:56 pm</h5>
+											<a class="reply_btn" href="#">Reply</a>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="review_box">
+								<h4>Post a comment</h4>
+								<form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="text" class="form-control" id="name" name="name" placeholder="Your Full name">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="email" class="form-control" id="email" name="email" placeholder="Email Address">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="text" class="form-control" id="number" name="number" placeholder="Phone Number">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<textarea class="form-control" name="message" id="message" rows="1" placeholder="Message"></textarea>
+										</div>
+									</div>
+									<div class="col-md-12 text-right">
+										<button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="row total_rate">
+								<div class="col-6">
+									<div class="box_total">
+										<h5>Overall</h5>
+										<h4>4.0</h4>
+										<h6>(03 Reviews)</h6>
+									</div>
+								</div>
+								<div class="col-6">
+									<div class="rating_list">
+										<h3>Based on 3 Reviews</h3>
+										<ul class="list">
+											<li><a href="#">5 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
+											<li><a href="#">4 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
+											<li><a href="#">3 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
+											<li><a href="#">2 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
+											<li><a href="#">1 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="review_list">
+								<div class="review_item">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-1.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+								<div class="review_item">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-2.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+								<div class="review_item">
+									<div class="media">
+										<div class="d-flex">
+											<img src="img/product/review-3.png" alt="">
+										</div>
+										<div class="media-body">
+											<h4>Blake Ruiz</h4>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+									</div>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+										commodo</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="review_box">
+								<h4>Add a Review</h4>
+								<p>Your Rating:</p>
+								<ul class="list">
+									<li><a href="#"><i class="fa fa-star"></i></a></li>
+									<li><a href="#"><i class="fa fa-star"></i></a></li>
+									<li><a href="#"><i class="fa fa-star"></i></a></li>
+									<li><a href="#"><i class="fa fa-star"></i></a></li>
+									<li><a href="#"><i class="fa fa-star"></i></a></li>
+								</ul>
+								<p>Outstanding</p>
+								<form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="email" class="form-control" id="email" name="email" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="text" class="form-control" id="number" name="number" placeholder="Phone Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Phone Number'">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<textarea class="form-control" name="message" id="message" rows="1" placeholder="Review" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Review'"></textarea></textarea>
+										</div>
+									</div>
+									<div class="col-md-12 text-right">
+										<button type="submit" value="submit" class="primary-btn">Submit Now</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section> -->
+	<!--================End Product Description Area =================-->
+
+	<!-- Start related-product Area -->
+	<section class="related-product-area section_gap_bottom small-related-section">
+		<div class="container">
+		  <h1>Related products</h1>
+		  <p>Similar products that you might like</p>
+		  <div class="row">
+			<% if (relatedProducts.length > 0 ) { %>
+			  <% relatedProducts.slice(0, 4).forEach((product) => { %> <!-- Display only the first 4 products -->
+				<div class="col-lg-3 col-md-6">
+				  <div class="single-product">
+					<% if (product.image && product.image.length > 0) { %>
+					  <a href="/singleProduct/<%= product._id %>">
+						<img class="img-fluid" src="/productImages/<%= product.image[0] %>" alt="">
+					  </a>
+					<% } else { %>
+					  <p>No image available.</p>
+					<% } %>
+					<div class="product-details">
+					  <h6><%= product.productname %></h6>
+					  <div class="price">
+						<h6>₹ <%= product.saleprice %></h6>
+						<h6 class="l-through"> ₹ <%= product.regularprice %></h6>
+					  </div>
+					  <div class="prd-bottom">
+						<a href="" class="social-info">
+						  <span class="ti-bag"></span>
+						  <p class="hover-text">add to bag</p>
+						</a>
+						<a href="" class="social-info">
+						  <span class="lnr lnr-heart"></span>
+						  <p class="hover-text">Wishlist</p>
+						</a>
+						<a href="" class="social-info">
+						  <span class="lnr lnr-sync"></span>
+						  <p class="hover-text">compare</p>
+						</a>
+						<a href="" class="social-info">
+						  <span class="lnr lnr-move"></span>
+						  <p class="hover-text">view more</p>
+						</a>
+					  </div>
+					</div>
+				  </div>
+				</div>
+			  <% }); %>
+			<% } else { %>
+			  <p>No Products</p>
+			<% } %>
+		  </div>
+		</div>
+	  </section>
+	  
+	<!-- End related-product Area -->
+
+	<!-- Modal for Adding to Cart -->
+<!-- <div id="addToCartModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Product Added to Cart</h4>
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		</div>
+		<div class="modal-body">
+		  <p>The product has been added to your cart.</p>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
+		  <a href="/cart" class="btn btn-primary">View Cart</a>
+		</div>
+	  </div>
+	</div>
+  </div> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script>
+	// 	 async function addToCart(product_Id) {
+    //     let product_quantity = document.getElementById('sst').value;
+    //     console.log('addToCart function called with product_Id:', product_Id);
+    //     console.log('Quantity:', product_quantity);
+    //     try {
+    //         const response = await axios.post('/addtocart', { product_quantity, product_Id });
+    //         console.log('Axios response:', response.data);
+
+    //         if (response.data.success) {
+    //             console.log('Product added to the cart');
+    //             $('#cartAddedModal').modal('show');
+    //         } else if (response.data.message === 'User not found') {
+    //             window.location = '/login';
+    //         } else {
+    //             console.log('An error occurred while adding the product to the cart:', response.data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error('An error occurred:', error);
+    //     }
+    // }
+
+    function increaseQuantity() {
+        var result = document.getElementById('sst');
+        var sst = result.value;
+        if (!isNaN(sst)) result.value++;
+        return false;
+    }
+
+    function decreaseQuantity() {
+        var result = document.getElementById('sst');
+        var sst = result.value;
+        if (!isNaN(sst) && sst > 0) result.value--;
+        return false;
+    }
+
+	$(document).ready(function() {
+    $('#addToCartForm').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                // Display success message using SweetAlert
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message,
+                    icon: 'success',
+                    confirmButtonText: 'View Cart',
+                    showCancelButton: true,
+                    cancelButtonText: 'Continue Shopping',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/cart';
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                // Display error message using SweetAlert
+                Swal.fire({
+                    title: 'Error!',
+                    text: `An error occurred: ${xhr.responseText || error}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+});
+
+
+		/// Store the wrapper HTMLElement into a constant
+		const imageWrapper = document.querySelector('.ImageWrapper');
+		const animatedImage = imageWrapper.querySelector('.AnimatedImage');
+		/// Get the width and height properties
+		const { offsetWidth, offsetHeight } = imageWrapper;
+		/// Create a timeout handler for requestAnimationFrame
+		let rafTimeout = null;
+		const CalculateOrigin = (event) => {
+			/// Get local cursor offset
+			const { offsetX, offsetY } = event;
+			/// Calculate deltas
+			const deltaX = (100 / offsetWidth) * offsetX;
+			const deltaY = (100 / offsetHeight) * offsetY;
+			/// Apply the style property to the image
+			animatedImage.style.transformOrigin = `${Math.min(100, deltaX)}% ${Math.min(100, deltaY)}%`;
+		};
+	
+		/// Add an event listener
+		imageWrapper.addEventListener('mousemove', (event) => {
+			if (rafTimeout) {
+				window.cancelAnimationFrame(rafTimeout);
+			}
+			/// Use requestAnimationFrame for event debouncing and animation frame improvements
+			rafTimeout = window.requestAnimationFrame(() => CalculateOrigin(event));
+		});
+
+	
+
+
+
+function addToWishlist(productId) {
+    $.ajax({
+        url: `/addwishlist/${productId}`,
+        method: 'POST',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Wishlist!',
+                    text: data.message,
+                    showCancelButton: true,
+                    confirmButtonText: 'View',
+                    cancelButtonText: 'Continue Shopping',
+                    timer: 3000,
+                    timerProgressBar: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/wishlist'; // Redirect to the wishlist page
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.message
+                });
+            }
+        },
+        error: function(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again later.'
+            });
+            console.error('Error:', error);
+        }
+    });
+}
+</script>
+
+	<%- include('partials/footer')%>
+		
+</body>
+
+</html>

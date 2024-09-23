@@ -1,0 +1,133 @@
+<%- include('partials/header')%>
+
+<style>
+     p {
+                        margin: 0;
+                    }
+            
+                    .upload__box {
+                        padding: 40px;
+                    }
+            
+                    .upload__inputfile {
+                        width: .1px;
+                        height: .1px;
+                        opacity: 0;
+                        overflow: hidden;
+                        position: absolute;
+                        z-index: -1;
+                    }
+            
+                    .upload__btn {
+                        display: inline-block;
+                        font-weight: 600;
+                        color: #fff;
+                        text-align: center;
+                        min-width: 116px;
+                        padding: 5px;
+                        transition: all .3s ease;
+                        cursor: pointer;
+                        border: 2px solid;
+                        background-color: #4045ba;
+                        border-color: #4045ba;
+                        border-radius: 10px;
+                        line-height: 26px;
+                        font-size: 14px;
+                    }
+            
+                    .upload__btn:hover {
+                        background-color: unset;
+                        color: #4045ba;
+                        transition: all .3s ease;
+                    }
+            
+                    .upload__btn-box {
+                        margin-bottom: 10px;
+                    }
+            
+                    .upload__img-wrap {
+                        display: flex;
+                        flex-wrap: wrap;
+                        margin: 0 -10px;
+                    }
+            
+                    .upload__img-box {
+                        width: 200px;
+                        padding: 0 10px;
+                        margin-bottom: 12px;
+                        position: relative;
+                    }
+            
+                    .upload__img-close {
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        text-align: center;
+                        line-height: 24px;
+                        z-index: 1;
+                        cursor: pointer;
+                        color: white;
+                        font-size: 14px;
+                    }
+            
+                    .img-bg {
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        position: relative;
+                        padding-bottom: 100%;
+                    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+        <!-- partial -->
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+            <div class="col-md-6 grid-margin stretch-card">
+
+                <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Add Brand</h4>
+
+                      <form class="forms-sample material-form" id="categoryForm" action="/admin/addBrand" method="post">
+                        <%
+                    if(typeof message !== 'undefined'){
+                      %>
+                      <h4><%= message %> </h4>
+                      <%
+                    }
+                     %>
+                      <div class="form-group">
+                        <input type="text" required="required" name="brandName" id="brand" required/>
+                        <label for="input" class="control-label">Brand Name</label><i class="bar"></i>
+                        <div id="error1" class="error-message"></div>
+                      </div>
+                        <button type="submit" class="button btn btn-primary"><span>Create Brand</span></button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+ </body>
+
+ <%- include('partials/footer')%>
+
+

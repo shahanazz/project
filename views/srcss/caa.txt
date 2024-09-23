@@ -1,0 +1,287 @@
+ body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .product-form-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .image-section {
+        flex: 1 1 400px; /* Flexbox sizing for responsiveness */
+        max-width: 400px;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    }
+
+    .main-image img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+        }
+
+    .thumbnail-images {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .thumbnail-wrapper {
+            display: inline-block;
+            margin: 5px;
+            text-align: center;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+    .thumbnail-wrapper input[type="file"] {
+        display: block;
+        margin-top: 5px;
+        width: 100%; /* Make file input full width */
+    }
+
+    .form-section {
+        flex: 1 1 600px; /* Flexbox sizing for responsiveness */
+        max-width: 600px;
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .primary-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .primary-btn:hover {
+        background-color: #218838;
+    }
+
+
+    //       let croppedImages = [];
+// let cropperInstances = [];
+
+// function handleFileSelect(input, index) {
+//     const file = input.files[0];
+//     const displayDivId = `display_image_div_${index}`;
+//     const imageId = `display_image_data_${index}`;
+//     const done = function(url) {
+//         document.getElementById(displayDivId).innerHTML = `<img name="display_image_data" id="${imageId}" src="${url}" alt="Uploaded Picture">`;
+//         initializeCropper(index);
+//     };
+
+//     if (file) {
+//         if (URL) {
+//             done(URL.createObjectURL(file));
+//         } else if (FileReader) {
+//             let reader = new FileReader();
+//             reader.onload = function(e) {
+//                 done(reader.result);
+//             };
+//             reader.readAsDataURL(file);
+//         }
+//     }
+// }
+
+// document.getElementById('browse_image_1').addEventListener('change', function() { handleFileSelect(this, 1); });
+
+// function initializeCropper(index) {
+//     const imageId = `display_image_data_${index}`;
+//     const image = document.getElementById(imageId);
+//     const button = document.getElementById('crop_button');
+//     const result = document.getElementById('cropped_image_result');
+//     let croppable = false;
+
+//     const cropper = new Cropper(image, {
+//         aspectRatio: 1,
+//         viewMode: 1,
+//         ready: function() {
+//             croppable = true;
+//         },
+//     });
+
+//     cropperInstances[index] = cropper;
+
+//     button.onclick = function() {
+//         if (!croppable) {
+//             return;
+//         }
+
+//         const croppedCanvas = cropper.getCroppedCanvas();
+//         const resizedCanvas = document.createElement('canvas');
+//         const ctx = resizedCanvas.getContext('2d');
+//         const newWidth = 300;
+//         const newHeight = 300;
+//         resizedCanvas.width = newWidth;
+//         resizedCanvas.height = newHeight;
+//         ctx.drawImage(croppedCanvas, 0, 0, newWidth, newHeight);
+
+//         const croppedImage = document.createElement('img');
+//         croppedImage.src = resizedCanvas.toDataURL();
+//         result.innerHTML = '';
+//         result.appendChild(croppedImage);
+
+//         croppedImages[index - 1] = croppedImage.src;
+
+//         // Update hidden input field with cropped image data URL
+//         const croppedImageInput = document.getElementById(`cropped_image_input_${index}`);
+//         croppedImageInput.value = croppedImage.src;
+//     };
+// }
+
+
+// function updateCroppedImagesContainer() {
+//     const container = document.getElementById('cropped_images_container');
+//     container.innerHTML = '';
+//     croppedImages.forEach((src, index) => {
+//           if (src) {
+//             const img = document.createElement('img');
+//             img.src = src;
+//             img.style.width = '100px'; // Adjust the width as needed
+//             img.style.height = '100px'; // Adjust the height as needed
+//             container.appendChild(img);
+//         }
+//     });
+// }
+
+// function download() {
+//     croppedImages.forEach((src, index) => {
+//         if (src) {
+//             const downloadLink = document.createElement("a");
+//             downloadLink.href = src;
+//             downloadLink.download = `download_${index + 1}.png`;
+//             downloadLink.click();
+//         }
+//     });
+// }
+
+// function upload() {
+//     $.ajax({
+//         type: "POST",
+//         dataType: "json",
+//         url: "/admin/addProduct",
+//         data: { images: croppedImages },
+//         success: function(response) {
+//             if (response.status === true) {
+//                 alert(response.msg);
+//             } else {
+//                 alert("Images not uploaded.");
+//             }
+//         }
+//     });
+// }
+</script>
+      
+
+
+
+      <!-- <div class="row">
+                                <div class="col-lg-6" align="center">
+                                    <label>Browse image</label>
+                                    <div id="display_image_div_1">
+                                        <img name="display_image_data" id="display_image_data_1" src="/admin/images/dummy-image.png" alt="Picture">
+                                    </div>
+                                    <input type="hidden" name="image" accept="image/*" id="cropped_image_data_1">
+                                    <br>
+                                    <input type="file" name="browse_image_1" id="browse_image_1" class="form-control">
+                                </div>
+                                <div class="col-lg-6" align="center">
+                                    <label>Browse image</label>
+                                    <div id="display_image_div_2">
+                                        <img name="display_image_data" id="display_image_data_2" src="/admin/images/dummy-image.png" alt="Picture">
+                                    </div>
+                                    <input type="hidden" name="cropped_image_data_2" id="cropped_image_data_2">
+                                    <br>
+                                    <input type="file" name="browse_image_2" id="browse_image_2" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6" align="center">
+                                    <label>Browse image</label>
+                                    <div id="display_image_div_3">
+                                        <img name="display_image_data" id="display_image_data_3" src="/admin/images/dummy-image.png" alt="Picture">
+                                    </div>
+                                    <input type="hidden" name="cropped_image_data_3" id="cropped_image_data_3">
+                                    <br>
+                                    <input type="file" name="browse_image_3" id="browse_image_3" class="form-control">
+                                </div>
+                                <div class="col-lg-6" align="center">
+                                    <label>Browse image</label>
+                                    <div id="display_image_div_4">
+                                        <img name="display_image_data" id="display_image_data_4" src="/admin/images/dummy-image.png" alt="Picture">
+                                    </div>
+                                    <input type="hidden" name="cropped_image_data_4" id="cropped_image_data_4">
+                                    <br>
+                                    <input type="file" name="browse_image_4" id="browse_image_4" class="form-control">
+                                </div>
+                            </div>
+                        
+                            <label>Preview</label>
+                            <div id="cropped_image_result">
+                                <img style="width: 350px;" src="/admin/images/dummy-image.png" />
+                            </div>
+                            <br>
+                            <button type="button" class="btn btn-success" id="crop_button">Crop</button>
+                            <button type="button" class="btn btn-danger" id="download_button" onclick="download()">Download</button>
+                            <button type="button" class="btn btn-warning" id="upload_button" onclick="upload()">Upload</button>
+                        </div>
+                        
+                        <div id="cropped_images_container">
+                          
+                        </div>
+                        
+                        <br><br>
+                        -->

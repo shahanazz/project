@@ -1,0 +1,100 @@
+
+<%- include('partials/header')%>
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.75rem;
+        display: none;
+    }
+
+    .show-hide {
+        cursor: pointer;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+    }
+
+</style>
+   
+<%- include('partials/navbar')%>
+
+
+	
+
+<!--================Login Box Area =================-->
+<section class="login_box_area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <img class="img-fluid" src="/user/img/login.jpg" alt="">
+                    <div class="hover">
+                        <h4>New to our website?</h4>
+                        <p>If you are new to Elegant , then please Register to explore more</p>
+                        <a class="primary-btn" href="/signup">Create an Account</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3>Log in to enter</h3>
+                    <form class="row login_form" action="/login" method="post" id="contactForm" novalidate="novalidate">
+
+                        <%
+                        if(typeof message !== 'undefined'){
+                          %>
+                          <h4><%= message %> </h4>
+                          <%
+                        }
+                         %>
+                         <!-- value="hanashahanas01@gmail.com" value="Shahanas123!" -->
+                        <div class="col-md-12 form-group">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'email'" value="hanashahanas01@gmail.com" >
+                            <div id="error1" class="error-message"></div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'password'" value="Shahanas123!">
+                            <div id="error2" class="error-message"></div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <input type="checkbox" id="f-option2" name="selector">
+                                <label for="f-option2">Keep me logged in</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="primary-btn">Log In</button>
+                            <a href="/forget">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Login Box Area =================-->
+
+<script>
+
+const emailId = document.getElementById('email');
+const passwordId = document.getElementById('password');
+const error1 = document.getElementById('error1');
+const error2 = document.getElementById('error2');
+const loginForm = document.getElementById('contactForm');
+
+
+     document.addEventListener('DOMContentLoaded', function () {
+        loginForm.addEventListener('submit', function (e) {
+          
+          
+
+            if (error.innerHTML || error.innerHTML) {
+                e.preventDefault();
+            }
+        });
+    });
+    
+</script>
+
+<%- include('partials/footer')%>

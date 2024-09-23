@@ -1,0 +1,133 @@
+<%- include('partials/header')%>
+<style>
+  .error-message {
+  color: red;
+  font-size: 0.75rem;
+  display: none;
+}
+</style>
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+        <!-- partial -->
+
+<div class="main-panel">
+<div class="content-wrapper">
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Edit Category</h4>
+        <!-- <p class="card-description"> default layout </p> -->
+        <form id="categoryForm" class="forms-sample material-form" action="/admin/editCategory?id=<%= categories._id %>" method="post">
+          <% if (typeof message !== 'undefined') { %>
+            <h4><%= message %></h4>
+          <% } %>
+          <div class="form-group">
+            <input id="category" type="text" required="required" name="category" value="<%= categories.category %>">
+            <label for="category" class="control-label">Category Name</label><i class="bar"></i>
+            <div id="error1" class="error-message"></div>
+          </div>
+          <div class="form-group">
+            <input id="description" type="text" required="required" name="description" value="<%= categories.description %>"/>
+            <label for="description" class="control-label">Description</label><i class="bar"></i>
+            <div id="error2" class="error-message"></div>
+          </div>
+          <div class="form-group">
+            <input id="offer" type="text" required="required" name="categoryOffer" value="<%= categories.categoryOffer %>"/>
+            <label for="offer" class="control-label">Category Offer</label><i class="bar"></i>
+            <div id="error3" class="error-message"></div>
+          </div>
+          <div class="button-container">
+            <button class="btn btn-dark" type="button">Cancel</button>
+            <button type="submit" class="button btn btn-primary"><span>Submit Category</span></button>
+          </div>
+        </form>
+        
+        
+      </div>
+    </div>
+   </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+    <script>
+  const catId = document.getElementById('category');
+  const descId = document.getElementById('description');
+  const offerId = document.getElementById('offer');
+
+  const error1 = document.getElementById('error1');
+  const error2 = document.getElementById('error2');
+  const error3 = document.getElementById('error3');
+
+  const categoryForm = document.getElementById('categoryForm');
+
+  function categoryValidateChecking() {
+    const catVal = catId.value;
+    if (catVal.trim() === '') {
+      error1.style.display = 'block';
+      error1.innerHTML = 'Please enter a category';
+    } else {
+      error1.style.display = 'none';
+      error1.innerHTML = '';
+    }
+  }
+
+  function descriptionValidateChecking() {
+    const descVal = descId.value;
+    if (descVal.trim() === '') {
+      error2.style.display = 'block';
+      error2.innerHTML = 'Please enter a description';
+    } else {
+      error2.style.display = 'none';
+      error2.innerHTML = '';
+    }
+  }
+
+  function offerValidateChecking() {
+    const offerVal = offerId.value;
+    const offerPattern = /^[0-9]+(\.[0-9]{1,2})?$/;
+
+    if (offerVal.trim() === '') {
+      error3.style.display = 'block';
+      error3.innerHTML = 'Please enter an offer';
+    } else if (!offerPattern.test(offerVal)) {
+      error3.style.display = 'block';
+      error3.innerHTML = 'Invalid offer format';
+    } else {
+      error3.style.display = 'none';
+      error3.innerHTML = '';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    catId.addEventListener('blur', categoryValidateChecking);
+    descId.addEventListener('blur', descriptionValidateChecking);
+    offerId.addEventListener('blur', offerValidateChecking);
+
+    categoryForm.addEventListener('submit', function (e) {
+      categoryValidateChecking();
+      descriptionValidateChecking();
+      offerValidateChecking();
+
+      if (error1.innerHTML || error2.innerHTML || error3.innerHTML) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+<%- include('partials/footer')%>

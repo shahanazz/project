@@ -1,0 +1,109 @@
+<<%- include('partials/header')%>
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+<div class="col-12 grid-margin">
+           
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Edit Products</h4>
+
+
+                  <form action="" method="post" class="form-sample" >
+                    <% if (typeof message !== 'undefined') { %>
+                      <h4><%= message %></h4>
+                    <% } %>
+                    <p class="card-description"> Product info </p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Product Name</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="productname" value="<%= product.productname %>" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Price</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="price" value="<%= product.price %>" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Category</label>
+                          <div class="col-sm-9">
+                            <select class="form-select" name="category" id="category" required>
+                              <% category.forEach(category => { %>
+                                <option value="<%= category._id %>" <%= product.category && product.category._id.toString() === category._id.toString() ? 'selected' : '' %>><%= category.category %></option>
+                              <% }) %>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Size</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="size" value="<%= product.size %>" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Quantity</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="quantity" value="<%= product.quantity %>" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        
+                        
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Description</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="description" value="<%= product.description %>" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Resave product</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+          </div>
+          </div>
+           
+
+
+
+
+      </div>
+</div>        
+
+<%- include('partials/footer')%>

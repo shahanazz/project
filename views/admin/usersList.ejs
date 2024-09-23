@@ -1,0 +1,190 @@
+<%- include('partials/header')%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<body class="with-welcome-text">
+    <div class="container-scroller">
+      
+      <!-- partial:partials/_navbar.html -->
+      <%- include('partials/navbar')%>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('partials/sidebar')%>
+        <!-- partial -->
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Users List</h4>
+                <p class="card-description"> Add class </p>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                       
+                        <th> username </th>
+                        <th> email</th>
+                        <th> mobile </th>
+                        <th> Block </th>
+                        <th> Blocked</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <%
+                      if(users.length >0){
+
+                        for(let i=0; i < users.length; i++){
+                        %>
+
+                      <tr>
+                        
+                        <td><%= users[i].username %> </td>
+                        <td> <%= users[i].email %></td>
+                        <td>   <%= users[i].mobile %> </td>
+                        <td>  <%= users[i].isBlocked === true ? 'Blocked' : 'Unblock' %> </td>
+                      <td class="text-end">
+                        <button class="btn btn-sm <%= users[i].isBlocked ? 'btn-warning' : 'btn-danger' %>" 
+                                onclick="toggleBlock('<%= users[i]._id %>', '<%= users[i].isBlocked %>')">
+                            <%= users[i].isBlocked ? 'Unblock' : 'Block' %>
+                        </button>
+                    </td>
+                    
+                      
+                      <!-- <td class="text-end">
+                          <% if (users[i].isBlocked === true) { %>
+                              <form action="/admin/unblock/<%= users[i]._id %>" method="post">
+                                <button type="submit" class="btn btn-sm btn-warning">Unblock</button>
+                              </form>
+                            <% } else { %>
+                              <form action="/admin/block/<%= users[i]._id %>" method="post">
+                                <button type="submit" class="btn btn-sm btn-danger">Block</button>
+                              </form>
+                            <% } %>
+                         
+                      </td> -->
+                      </tr>
+
+                      <% }%>
+                      <% }else{
+                           %>
+
+                           <tr>
+                            <td colspan="5"> user not found</td>
+                        </tr>
+            
+                          <%
+                        }
+                        %>
+                    </tbody>
+                  </table>
+                </div>
+
+                <br><br>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Previous</a>
+            </li>
+          <% } %>
+      
+          <% for (let j = 1; j <= totalPages; j++) { %>
+            <li class="page-item <%= (j === currentPage) ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= j %>"><%= j %></a>
+            </li>
+          <% } %>
+      
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+    </div>
+  </div>
+
+  <!-- SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script>
+  function toggleBlock(userId, isBlocked) {
+      // Convert the string "true"/"false" to a boolean
+      isBlocked = (isBlocked === 'true');
+
+      var xhr = new XMLHttpRequest();
+      var url = isBlocked ? `/admin/unblock/${userId}` : `/admin/block/${userId}`;
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                  var response = JSON.parse(xhr.responseText);
+                  var button = document.querySelector(`button[onclick*='${userId}']`);
+                  if (response.success) {
+                      if (isBlocked) {
+                          button.textContent = 'Block';
+                          button.classList.remove('btn-warning');
+                          button.classList.add('btn-danger');
+                          button.setAttribute('onclick', `toggleBlock('${userId}', 'false')`);
+                          Swal.fire({
+                              title: 'Unblocked!',
+                              text: 'The user has been unblocked.',
+                              icon: 'success',
+                              confirmButtonText: 'OK'
+                          });
+                      } else {
+                          button.textContent = 'Unblock';
+                          button.classList.remove('btn-danger');
+                          button.classList.add('btn-warning');
+                          button.setAttribute('onclick', `toggleBlock('${userId}', 'true')`);
+                          Swal.fire({
+                              title: 'Blocked!',
+                              text: 'The user has been blocked.',
+                              icon: 'success',
+                              confirmButtonText: 'OK'
+                          });
+                      }
+                  } else {
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'An error occurred: ' + response.message,
+                          icon: 'error',
+                          confirmButtonText: 'OK'
+                      });
+                  }
+              } else {
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'An error occurred during the transaction.',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  });
+              }
+          }
+      };
+
+      xhr.send();
+  }
+</script>
+
+
+
+  <%- include('partials/footer')%>
+</body>        

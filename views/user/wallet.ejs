@@ -1,0 +1,153 @@
+<%- include('partials/header')%>
+
+<style>
+    /* Desktop styles */
+    .order-section,
+    .product-section {
+      margin: 20px;
+      padding: 30px;
+      border: 1px solid #beb0b0;
+      background-color: #fff;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Tablet styles */
+    @media (max-width: 768px) {
+  
+      .order-section,
+      .product-section {
+        padding: 20px;
+      }
+    }
+  
+    /* Mobile styles */
+    @media (max-width: 480px) {
+  
+      .order-section,
+      .product-section {
+        margin: 10px;
+        padding: 15px;
+      }
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+  
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+    }
+  
+    .order-section h2,
+    .product-section h2 {
+      margin-top: 0;
+      color: #F6511D;
+    }
+  
+    .edit-button,
+    .delete-button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: #fff;
+    }
+  
+    .edit-button {
+      background-color: #F6511D;
+    }
+  
+    .delete-button {
+      background-color: #FF4500;
+    }
+  
+    .edit-button:hover,
+    .delete-button:hover {
+      background-color: #FF6347;
+    }
+  
+    /* Add styles for the balance section */
+    .balance-section {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #beb0b0;
+      background-color: #fff;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .balance-section h2 {
+      margin-top: 0;
+      color: #F6511D;
+    }
+  
+    .balance-amount {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  </style>
+   
+<%- include('partials/navbar')%>
+  <div class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg'); ">
+   <!-- Start Banner Area -->
+ <section class="banner-area organic-breadcrumb">
+  <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+          <div class="col-first">
+              <h1>User Profile</h1>
+              <nav class="d-flex align-items-center">
+                  <a href="index.html">My Wallet<span class="lnr lnr-arrow-right"></span></a>
+                  <a href="category.html">My Wallet</a>
+              </nav>
+          </div>
+      </div>
+  </div>
+</section>
+<!-- End Banner Area -->
+<br>
+  
+  <div style="padding: 20px 200px;">
+    <!-- Add the balance section here -->
+   
+  
+    <section class="product-section" id="reloadData">
+      <h4>wallet balance:<strong> <%=user.wallet%></strong></h4>
+      <table>
+        <% if (user.wallet !== 0) {%>
+        <thead style="font-weight: 900 ; color: black;">
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody style="font-weight: 700; ">
+  
+          <% user.walletHistory.forEach(function(item) { %>
+          <tr>
+            <td><%= item.date.toLocaleDateString() %></td>
+  
+            <% if(item.amount>0){ %>
+            <td style="color: green;"><%= item.amount %></td>
+            <% }else{%>
+            <td style="color:red;"><%= item.amount %></td>
+            <% }%>
+            <td><%= item.type %></td>
+            <td><%= item.message %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <%}%>
+      <div>       
+    </div>
+    </section>
+  </div>
+  </div>
+
+  <%- include('partials/footer')%>
