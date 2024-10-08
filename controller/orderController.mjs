@@ -1,16 +1,16 @@
 import  User from "../models/userModel.mjs";
 import Product from '../models/productModel.mjs';
-import Order from '../models/orderModel.mjs';
-import Category from '../models/categoryModel.mjs';
-import Address from '../models/addressModel.mjs';
-import Cart from '../models/cartModel.mjs';
+import Order from '../models/orderModel.mjs'; 
+import Category from '../models/categoryModel.mjs'; 
+import Address from '../models/addressModel.mjs'; 
+import Cart from '../models/cartModel.mjs';    
 import paymentHelper from '../config/payment.mjs';
 import Coupon from '../models/couponModel.mjs'
-import Razorpay from "razorpay";
-import moment  from 'moment'; 
-import crypto from 'crypto';
-moment.locale('en'); 
-const shortDateFormat = 'YYYY-MM-DD'; 
+import Razorpay from "razorpay"; 
+import moment  from 'moment';  
+import crypto from 'crypto'; 
+moment.locale('en');  
+const shortDateFormat = 'YYYY-MM-DD';  
 
 // Initialize Razorpay instance
 const razorpayInstance = new Razorpay({
@@ -285,6 +285,7 @@ const postAddAddress = async(req,res) => {
 
 const placeOrder = async (req, res) => {
     try {
+
         const userId = req.session.user_id;
         const { address, paymentMethod, walletAmount, finalPrice, couponCode } = req.body;
 
@@ -361,7 +362,7 @@ const placeOrder = async (req, res) => {
         }
 
         console.log('coupon discount-->', couponDiscount);
-        console.log('product offer discount-->', productOfferDiscount);
+        console.log();
         // Create the order with discounts
         const order = new Order({
             userId: userId,
@@ -373,13 +374,14 @@ const placeOrder = async (req, res) => {
             orderStatus: orderStatus,
             address: address,
             walletUsed: walletUsed,
-            amountPayable: amountAfterDiscount, // Amount after applying discounts
+            amountPayable: amountAfterDiscount, 
             date: new Date(),
         });
 
+        
         const savedOrder = await order.save();
 
-        // COD or fully paid with wallet
+        // COD ,fully paid with wallet
         if (paymentMethod === 'cod' || amountPayable === 0) {
             for (const items of cartProducts[0].product) {
                 const { productId, quantity } = items;
@@ -387,7 +389,7 @@ const placeOrder = async (req, res) => {
             }
 
             // Update wallet if used
-            if (walletUsed > 0) {
+            if (walletUsed > 0) {  
                 await User.updateOne(
                     { _id: userId },
                     {
@@ -404,7 +406,7 @@ const placeOrder = async (req, res) => {
                 );
             }
 
-            // Delete the cart
+            // Delete  cart
             await Cart.deleteOne({ userId: userId });
 
             return res.json({
@@ -701,10 +703,16 @@ const cancelOrder = async (req, res) => {
 
                 console.log(totalRefundAmount);
 
+                if (order.orderStatus !== 'Pending') {
+                    await Product.updateOne({ _id: productId }, {
+                        $inc: { quantity }
+                    });
+                    console.log('quantity updated');
+                } else {
+                    console.log('Pending will not update quantity!');
+                }
+                
                
-                await Product.updateOne({ _id: productId }, {
-                    $inc: { quantity }
-                });
 
                 orderItem.status = 'Cancelled';
                 orderItem.canceledQuantity = quantity;
@@ -724,9 +732,9 @@ const cancelOrder = async (req, res) => {
             await Order.updateOne({ _id: orderId }, { $set: { products: order.products } });
         }
 
-        console.log('pYYYYY',order.paymentMethod); 
-      
-        if (order.paymentMethod && order.paymentMethod !== 'cod' && status === 'Cancelled' && totalRefundAmount > 0 ) {
+        
+        console.log('orderstatus' , order.orderStatus);
+        if (order.paymentMethod && order.paymentMethod !== 'cod' && status === 'Cancelled' && totalRefundAmount > 0 && status === 'Pending') {
             const user = await User.findById(userId);
             if (user) {
                 console.log('User before update:', user);

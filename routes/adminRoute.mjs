@@ -49,7 +49,9 @@ adminRoute.get("/addProduct", adminAuth.isLogin, productController.loadAddProduc
 adminRoute.post("/addProduct", adminAuth.isLogin, upload.array("image", 4), productController.postProduct);
 adminRoute.get("/editProduct", adminAuth.isLogin, productController.loadEditPage);
 adminRoute.post("/editProduct", adminAuth.isLogin, upload.array("image", 4), productController.postEditProduct);
+adminRoute.post('/deleteImage' , adminAuth.isLogin , productController.deleteSingleImage);
 adminRoute.get("/deleteProduct", adminAuth.isLogin, productController.deleteProduct);
+
 
 // COUPON routes
 adminRoute.get('/coupon' , adminAuth.isLogin, adminController.loadCoupon);

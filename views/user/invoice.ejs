@@ -60,14 +60,17 @@
         </div>
 
         <div class="invoice-details">
-            <p><strong>Billing To:</strong></p>
+            <h4><strong>Billing To:</strong></h4>
             <p>
-                <%= order.address.username %><br>
-               
-                <%= order.address.city %>, <%= order.address.state %> <%= order.address.pincode%><br>
-                <%= order.address.country %>
+              <%= order.address.username %><br> <!-- Print username -->
+              <%= order.address.houseName %>, <%= order.address.landmark %><br> <!-- Print house name and landmark -->
+              <%= order.address.city %>, <%= order.address.state %>, <%= order.address.pincode %><br> <!-- Print city, state, pincode -->
+              <%= order.address.country %><br> <!-- Print country -->
+              Mobile: <%= order.address.mobile %><br> <!-- Print mobile number -->
+              Email: <%= order.address.email %> <!-- Print email -->
             </p>
-        </div>
+          </div>
+          
 
         <div class="invoice-items">
             <table>

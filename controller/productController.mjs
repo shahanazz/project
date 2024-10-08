@@ -3,6 +3,9 @@ import asyncHandler from 'express-async-handler';
 import Category from '../models/categoryModel.mjs';
 import Brand from '../models/brandModel.mjs';
 import Coupon from '../models/couponModel.mjs';
+import fs from 'fs';
+import path from 'path';
+// import path from 'path';
 // import { initializeApp } from 'firebase/app';
 // import {getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 // import firebaseConfig from '../config/firebaseConfig.mjs'
@@ -105,6 +108,16 @@ const postProduct = asyncHandler(async (req, res) => {
     if (offer > 0) {
       saleprice = regularprice - (regularprice * (offer / 100));
       saleprice = Math.round(saleprice); 
+    }else{
+        const categoryData = await Category.findById(category);
+        console.log('category data -->', categoryData);
+        const categoryOffer = categoryData ? categoryData.categoryOffer : 0;
+        
+
+        if (categoryOffer > 0) {
+            saleprice = regularprice - (regularprice * (categoryOffer / 100));
+            saleprice = Math.round(saleprice);
+        }
     }
       console.log(regularprice);
       console.log(saleprice); 
@@ -220,6 +233,85 @@ const postEditProduct = async (req, res) => {
   }
 };
 
+// const deleteSingleImage = async(req,res) =>{
+//     try {
+//         const product = await Product.findByIdAndUpdate(productIdToServer , {$pull : {image : imageNameToServer}});
+//         const imagePath = path.join('public', 'productImages', 're-image', imageNameToServer)
+
+//         if(fs.existSync(imagePath)){
+//             await fs.unlinkSync(imagePath);
+//             console.log(`image ${imageNameToServer} deleted successfully`);
+//         }else{
+//             console.log(`image ${imageNameToServer} not found`);
+//         }
+
+//         res.send({success : true});
+//     } catch (error) {
+//         console.log(error.message);
+//         res.redirect('/500');
+//     }
+// }
+const deleteSingleImage = async (req, res) => {
+    try {
+        const {imageNameToServer,productIdToServer } = req.body; 
+    
+        // console.log(imageNameToServer);
+        // console.log(productIdToServer);
+
+        const product = await Product.findByIdAndUpdate(productIdToServer, { $pull: { image: imageNameToServer } });
+        
+        
+        const imagePath = path.join('public', 'productImages', imageNameToServer);
+
+        if (fs.existsSync(imagePath)) {
+            await fs.unlinkSync(imagePath);
+            console.log(`Image ${imageNameToServer} deleted successfully`);
+        } else {
+            console.log(`Image ${imageNameToServer} not found`);
+        }
+
+        res.send({ success: true });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ success: false, message: error.message });
+    }
+}
+
+
+  
+// delete product
+const deleteProduct = asyncHandler(async(req,res) =>{
+    try {
+        const id = req.query.id;
+        console.log(id);
+        
+        const product = await Product.findByIdAndUpdate(id,
+            { $set : {status : false},
+        });
+
+        res.redirect('/admin/product');
+
+    } catch (error) {
+        console.log(error.message);
+    }
+})
+
+
+  
+
+export default {
+    loadProduct,
+    loadAddProduct,
+    postProduct,
+    loadEditPage,
+    postEditProduct,
+    deleteSingleImage,
+    deleteProduct,
+}
+
+
+
+
 // const postEditProduct = async (req, res) => {
 //     try {
 
@@ -265,41 +357,6 @@ const postEditProduct = async (req, res) => {
 //         console.log(error.message);
 //     }
 // };
-
-
-
-  
-// delete product
-const deleteProduct = asyncHandler(async(req,res) =>{
-    try {
-        const id = req.query.id;
-        console.log(id);
-        
-        const product = await Product.findByIdAndUpdate(id,
-            { $set : {status : false},
-        });
-
-        res.redirect('/admin/product');
-
-    } catch (error) {
-        console.log(error.message);
-    }
-})
-
-
-  
-
-export default {
-    loadProduct,
-    loadAddProduct,
-    postProduct,
-    loadEditPage,
-    postEditProduct,
-    deleteProduct,
-}
-
-
-
 
 // const applyCoupon = async (req, res) => {
   //     try {

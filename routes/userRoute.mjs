@@ -45,13 +45,15 @@ router.post("/forget", userController.forgetVerify);
 router.post("/password-otp-veification",userController.forgetPasswordOtpVerify);
 router.post("/new-Password",userController.newPassword);
 router.get("/logout", auth.isLogin, userController.userLogout);
-
+ 
 // SHOP Routes
 router.get("/shop", userController.loadShop);
 router.get("/singleProduct/:id", userController.loadSingleProduct);
 router.get("/filter", userController.filterProduct);    
-router.get("/search", userController.sort);
+router.get("/sort", userController.sort);
 router.get('/searchProduct' , userController.searchProduct);
+// Add the route to your router
+router.get("/shope", userController.combinedSearchFilterSort);
 // router.get('/shope', userController.filterSortSearchProducts);
  
 // WISHLIST Routes

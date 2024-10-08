@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import dbConnect from './config/dbConnect.mjs';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'; 
 import nocache from 'nocache';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';

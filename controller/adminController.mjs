@@ -453,7 +453,7 @@ const sortSalesReport = async (req, res, next) => {
         const findCoupons = await Coupon.find({})
         res.render("coupon", { coupons: findCoupons });
     } catch (error) {
-        console.log(error.message);
+        console.log(error.message);   
     }
 }
 
@@ -468,7 +468,13 @@ const createCoupon = async (req, res) => {
             minimumPrice: parseInt(req.body.minimumPrice)
         };
 
-
+        // const existingCoupon = await Coupon.findOne({ name: data.couponName });
+        // if (existingCoupon) {
+        //     // Render the coupon form with an error message
+        //     return res.render('coupon', {
+        //         message: 'Coupon name already exists. Please choose a different name.',
+        //     });
+        // }
        
         const newCoupon = new Coupon({
             name: data.couponName,

@@ -932,7 +932,7 @@ const sort = async (req, res) => {
     }
 
     //  sort criteria
-    const allProducts = await Product.find().sort(sortCriteria);
+    const allProducts = await Product.find({status : true}).sort(sortCriteria);
     console.log(allProducts);
 
     // Pagination
@@ -979,7 +979,9 @@ const searchProduct = async (req, res) => {
     }
 
     
-    const allProducts = await Product.find(searchQuery);
+    // const allProducts = await Product.find(searchQuery);
+    const allProducts = await Product.find({ ...searchQuery, status: true });
+
     
    
     const itemsPerPage = 6;
@@ -1002,6 +1004,123 @@ const searchProduct = async (req, res) => {
     res.status(500).redirect('/500');
   }
 }
+
+
+const combinedSearchFilterSort = async (req, res) => {
+  try {
+    // Get parameters from the request
+    const query = req.query.query || '';
+    const category = req.query.category;
+    const color = req.query.color;
+    const brand = req.query.brand;
+    const sort = req.query.sort || 'new_arrivals';
+
+    // Build the base query object
+    let searchQuery = { status: true };
+
+    // Add search criteria
+    if (query) {
+      searchQuery.productname = new RegExp(query, 'i'); // Regex for case-insensitive search
+    }
+
+    // Add filter criteria
+    if (category) {
+      const findCategory = await Category.findOne({ category });
+      if (findCategory) {
+        searchQuery.category = findCategory._id;
+      }
+    }
+
+    if (brand) {
+      const findBrand = await Brand.findOne({ brandName: brand });
+      if (findBrand) {
+        searchQuery.brand = findBrand._id;
+      }
+    }
+
+    if (color) {
+      searchQuery.color = color;
+    }
+
+    // Fetch products based on the built searchQuery
+    const allProducts = await Product.find(searchQuery);
+
+    // Sorting criteria
+    let sortCriteria = {};
+    switch (sort) {
+      case 'popularity':
+        sortCriteria = { orderCount: -1 };
+        break;
+      case 'price_low_to_high':
+        sortCriteria = { saleprice: 1 };
+        break;
+      case 'price_high_to_low':
+        sortCriteria = { saleprice: -1 };
+        break;
+      case 'average_ratings':
+        sortCriteria = { averageRating: -1 };
+        break;
+      case 'featured':
+        sortCriteria = { featured: -1 };
+        break;
+      case 'new_arrivals':
+        sortCriteria = { createdOn: -1 };
+        break;
+      case 'aA_zZ':
+        sortCriteria = { productname: 1 };
+        break;
+      case 'zZ_aA':
+        sortCriteria = { productname: -1 };
+        break;
+      default:
+        sortCriteria = { createdOn: 1 };
+    }
+
+    // Apply sorting to the filtered products
+    const sortedProducts = allProducts.sort((a, b) => {
+      for (const key in sortCriteria) {
+        if (sortCriteria[key] === 1) {
+          if (a[key] > b[key]) return 1;
+          if (a[key] < b[key]) return -1;
+        } else if (sortCriteria[key] === -1) {
+          if (a[key] < b[key]) return 1;
+          if (a[key] > b[key]) return -1;
+        }
+      }
+      return 0; // Equal
+    });
+
+    // Pagination
+    const itemsPerPage = 6;
+    const currentPage = parseInt(req.query.page) || 1;
+    const totalItems = sortedProducts.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentProduct = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+
+    // Fetch categories and brands for rendering
+    const categories = await Category.find({ status: true });
+    const brands = await Brand.find({ status: true });
+
+    res.render("shop", {
+      user: req.user,
+      products: currentProduct,
+      category: categories,
+      brand: brands,
+      totalPages,
+      currentPage,
+      selectedCategory: category || null,
+      selectedBrand: brand || null,
+      selectedColor: color || null,
+      query,
+      sort: sort
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect('/500');
+  }
+};
+
 
 const loadWallet = async(req,res) =>{
   try {
@@ -1028,13 +1147,14 @@ const loadWallet = async(req,res) =>{
 const loadInvoice = async(req,res) =>{   
   try {
     const orderId = req.params.id;
-    const userId = req.session.user_id; // assuming user_id is in the session
+    const userId = req.session.user_id; 
       const order = await Order.findOne({ _id: orderId, userId: userId })
     .populate('products.productId')
-    .populate('userId');
+    .populate('userId')
+    .populate('address'); 
 
     if (!order) {
-      return res.status(400).render('400');
+      return res.status(400).redirect('/400');
   }
 
     res.render('invoice', {order});
@@ -1231,6 +1351,7 @@ export default  {
     loadShop,
     loadSingleProduct,
     filterProduct,
+    combinedSearchFilterSort,
     loadProfile,
     loadEditProfile,
     updateProfile,
