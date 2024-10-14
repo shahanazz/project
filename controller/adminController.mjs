@@ -363,7 +363,10 @@ const loadSalesReport = async (req, res) => {
     const totalOrderedProducts = await Order.countDocuments({'orderStatus' : "Confirmed"});
 
     // overall discount
-    const overallDiscount = totalAmount[0] ? totalAmount[0].discount + totalAmount[0].couponDiscount : 0;
+    // const overallDiscount = totalAmount[0] ? totalAmount[0].discount + totalAmount[0].couponDiscount : 0;
+    const overallDiscount = totalAmount[0] ? 
+    (totalAmount[0].totalDiscount || 0) + (totalAmount[0].totalCoupon || 0) : 0;
+
 
     console.log('overall discount --->',overallDiscount);
 
@@ -421,17 +424,29 @@ const sortSalesReport = async (req, res, next) => {
     }
 
     // sales report data
-    const totalAmount = await Order.aggregate([
-      { $match: matchCondition },
-      { $group: { _id: null, total: { $sum: '$totalPrice' }, discount: { $sum: '$discount' }, coupon: { $sum: '$coupon' } } }
-    ]);
+ // sales report data
+const totalAmount = await Order.aggregate([
+  { $match: matchCondition },
+  { 
+    $group: { 
+      _id: null, 
+      total: { $sum: '$totalPrice' }, 
+      discount: { $sum: '$discount' }, 
+      coupon: { $sum: '$coupon' } 
+    } 
+  }
+]);
+
 
     const products = await Order.find(matchCondition)
       .populate('userId')
-      .populate('products.productId');
+      .populate('products.productId');   
 
     const salesCount = await Order.countDocuments({ "orderStatus": "Delivered", ...matchCondition });
     const overallDiscount = totalAmount[0] ? totalAmount[0].discount : 0;
+    // const overallDiscount = totalAmount[0] ? 
+    // (totalAmount[0].totalDiscount || 0) + (totalAmount[0].totalCoupon || 0) : 0;
+    console.log(overallDiscount);
 
     res.render('salesReport', {
       totalAmount,
@@ -468,13 +483,14 @@ const createCoupon = async (req, res) => {
             minimumPrice: parseInt(req.body.minimumPrice)
         };
 
-        // const existingCoupon = await Coupon.findOne({ name: data.couponName });
-        // if (existingCoupon) {
-        //     // Render the coupon form with an error message
-        //     return res.render('coupon', {
-        //         message: 'Coupon name already exists. Please choose a different name.',
-        //     });
-        // }
+        const existingCoupon = await Coupon.findOne({ name: data.couponName });
+        if (existingCoupon) {
+            // Render the coupon form with an error message
+            return res.render('coupon', {
+                message: 'Coupon name already exists. Please choose a different name.',
+                coupons: data,
+            });
+        }
        
         const newCoupon = new Coupon({
             name: data.couponName,

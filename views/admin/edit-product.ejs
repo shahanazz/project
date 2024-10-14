@@ -1,4 +1,11 @@
 <%- include('partials/header')%>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 <style>
@@ -89,13 +96,6 @@
         display: none;
     }
 </style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
-<!-- SweetAlert2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 
 <body>
 <div class="container-scroller">
@@ -170,42 +170,37 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <% if (product.image && product.image.length > 0) { %>
-                                <% for (let i = 0; i < product.image.length; i++) { %>
-                                    <div class="upload__box">
-                                        <div class="upload__btn-box">
-                                            <label class="upload__btn">
-                                                <p>Upload images</p>
-                                                <input type="file" data-index="<%= i %>" data-max_length="20" class="upload__inputfile" name="image" accept="image/*">
-                                            </label>
-                                        </div>
-                                        <div class="upload__img-wrap">
+                            <div class="upload__box">
+                                <div class="upload__btn-box">
+                                    <label class="upload__btn">
+                                        <p>Upload images</p>
+                                        <input type="file" class="upload__inputfile" name="image" accept="image/*">
+                                    </label>
+                                </div>
+                                <div class="upload__img-wrap">
+                                    <% if (product.image && product.image.length > 0) { %>
+                                        <% for (let i = 0; i < product.image.length; i++) { %>
                                             <div class='upload__img-box'>
-                                                <img src="/productImages/<%= product.image[i] %>" alt="Product Image" class="img-bg" style="width: 200;"/>
-                                                <div class='upload__img-close' data-index="<%= i %>">
+                                                <img src="/productImages/<%= product.image[i] %>" alt="Product Image" class="img-bg" style="width: 200px;">
+                                                <div class='upload__img-close'>
                                                     <a href="javascript:void(0)" onclick="deleteSingleImage('<%= product.image[i] %>', '<%= product._id %>')" style="color: red;">×</a>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                <% } %>
-                            <% } else { %>
-                                <!-- If no images, show empty upload boxes -->
-                                <% for (let i = 0; i < 4; i++) { %>
-                                    <div class="upload__box">
-                                        <div class="upload__btn-box">
-                                            <label class="upload__btn">
-                                                <p>Upload images</p>
-                                                <input type="file" data-index="<%= i %>" data-max_length="20" class="upload__inputfile" name="image" accept="image/*">
-                                            </label>
-                                        </div>
-                                        <div class="upload__img-wrap"></div>
-                                    </div>
-                                <% } %>
-                            <% } %>
+                                        <% } %>
+                                    <% } else { %>
+                                        <!-- When no images are uploaded, allow uploading and previewing -->
+                                        <% for (let i = 0; i < 3; i++) { %>
+                                            <div class="upload__img-box upload__img-placeholder">
+                                                <img src="" alt="Product Image" class="img-bg" style="width: 200px; display: none;">
+                                                <div class="upload__img-close" style="display: none;">
+                                                    <a href="javascript:void(0)" class="delete-new-image" style="color: red;">×</a>
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
                             
-                            
-                        </div>
                         <input type="hidden" id="deletedImages" name="deletedImages" value="">
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -224,7 +219,7 @@
 
 
     <script>
-        jQuery(document).ready(function () {
+   jQuery(document).ready(function () {
     ImgUpload();
 });
 
@@ -310,10 +305,12 @@ function ImgUpload() {
             return img.name !== file;
         });
         $(this).closest('.upload__img-box').remove();
-        hiddenInputsContainer.find('input[value="' + file + '"]').remove(); // Remove corresponding hidden input
     });
 }
 
+
+
+ 
 const pnameId = document.getElementById('productname');
 const catId = document.getElementById('category');
 const brandId = document.getElementById('brand');
@@ -325,6 +322,7 @@ const sprice = document.getElementById('saleprice');
 const quantity = document.getElementById('quantity');
 const offer = document.getElementById('productoffer');
 
+
 const error1 = document.getElementById('error1');
 const error2 = document.getElementById('error2');
 const error3 = document.getElementById('error3');
@@ -334,12 +332,115 @@ const error6 = document.getElementById('error6');
 const error7 = document.getElementById('error7');
 const error8 = document.getElementById('error8');
 
-// const errorImages = document.getElementById('error-images');
-// const hiddenInputsContainer = $('#hidden-inputs-container');
+const errorImages = document.getElementById('error-images');
+const hiddenInputsContainer = $('#hidden-inputs-container');
 
 const productForm = document.getElementById('productForm');
+// console.log( 'product form -->',productForm);
 
-console.log(productForm);
+console.log('product formsss',productForm);
+
+document.addEventListener('DOMContentLoaded', function () {
+    pnameId.addEventListener('blur', validateProductName);
+    colorId.addEventListener('blur', validateColor);
+    sizeId.addEventListener('blur', validateSize);
+     descId.addEventListener('blur', validateDescription);
+    rprice.addEventListener('blur', validateRegularPrice);
+    quantity.addEventListener('blur', validateQuantity);
+
+    // Validate images on file selection, not just hidden inputs
+    // $('.upload__inputfile').on('change', validateImages);
+
+    // Form submission event
+    productForm.addEventListener('submit', function (e) {
+        e.preventDefault();  // Prevent default form submission temporarily
+
+        if (!validateForm()) {
+            // Validation failed, show SweetAlert error
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Failed',
+                text: 'Please correct the errors before submitting.'
+            });
+        } else {
+            // Validation passed, show SweetAlert success
+            Swal.fire({
+                icon: 'success',
+                title: 'Product updated successfully',
+                text: 'The product details have been successfully updated.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    productForm.submit();  // Submit the form after confirmation
+                }
+            });
+        }
+    });
+});
+
+
+// productForm.addEventListener('submit', function (e) {
+//     // Prevent default form submission for validation purposes
+//     e.preventDefault();
+
+//     // Run all validation functions
+//     validateProductName();
+//     validateCategory();
+//     validateBrand();
+//     validateColor();
+//     validateSize();
+//     validateDescription();
+//     validateQuantity();
+//     validateRegularPrice(); // Include this if needed
+
+//     // Check if there are any visible errors
+//     if (error1.style.display === 'block' ||
+//         error2.style.display === 'block' ||
+//         error3.style.display === 'block' ||
+//         error4.style.display === 'block' ||
+//         error5.style.display === 'block' ||
+//         error6.style.display === 'block' ||
+//         error7.style.display === 'block' ||
+//         error8.style.display === 'block') {
+        
+//         // Prevent form submission and show error SweetAlert if validation fails
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Please correct the errors',
+//             text: 'Ensure all fields are properly filled out.'
+//         });
+
+//         // Return to prevent further execution since there are errors
+//         return false;
+//     }
+
+//     // If validation passes, show success SweetAlert and then submit the form
+//     Swal.fire({
+//         icon: 'success',
+//         title: 'Product updated successfully',
+//         text: 'The product details have been successfully updated.'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             // Submit the form after the user confirms the success message
+//             productForm.submit();
+//         }
+//     });
+// });
+
+function validateForm() {
+    validateProductName();
+    validateColor();
+    validateDescription();
+    validateSize();
+    validateRegularPrice();
+    validateQuantity();
+    // validateImages();
+
+    if (error1.innerHTML || error4.innerHTML || error5.innerHTML || error6.innerHTML || error7.innerHTML || error6.innerHTML ) {
+        return false;
+    }
+    return true;
+}
+
 
 function validateProductName() {
     const pnameVal = pnameId.value;
@@ -352,27 +453,6 @@ function validateProductName() {
     }
 }
 
-function validateCategory() {
-    const catVal = catId.value;
-    if (catVal.trim() === '') {
-        error2.style.display = 'block';
-        error2.innerHTML = 'Please select a category';
-    } else {
-        error2.style.display = 'none';
-        error2.innerHTML = '';
-    }
-}
-
-function validateBrand() {
-    const brandVal = brandId.value;
-    if (brandVal.trim() === '') {
-        error3.style.display = 'block';
-        error3.innerHTML = 'Please enter the brand';
-    } else {
-        error3.style.display = 'none';
-        error3.innerHTML = '';
-    }
-}
 
 function validateColor() {
     const colorVal = colorId.value;
@@ -445,71 +525,10 @@ function validateImages() {
         errorImages.style.display = 'block';
         errorImages.innerHTML = 'Please upload at least 3 images';
     } else {
-        errorImages.style.display = 'none';
+        errorImages.style.display = 'none'; 
         errorImages.innerHTML = '';
     }
 }
-
-
-function validateForm() {
-    // Call all validation functions
-    validateProductName();
-    validateCategory();
-    validateBrand();
-    validateColor();
-    validateDescription();
-    validateSize();
-    validateRegularPrice();
-    validateQuantity();
-    validateImages();
-
-    // Check if any error messages are visible
-    if (error1.style.display === 'block' ||
-        error2.style.display === 'block' ||
-        error3.style.display === 'block' ||
-        error4.style.display === 'block' ||
-        error5.style.display === 'block' ||
-        error6.style.display === 'block' ||
-        error7.style.display === 'block' ||
-        error8.style.display === 'block' 
-        ) {
-        return false; 
-        console.log('return false------');
-    }
-    console.log('return false------');
-    return true;  
-}
-
-
-productForm.addEventListener('submit', function (e) {
-    // Run all validation functions
-    validateProductName();
-    validateCategory();
-    validateBrand();
-    validateColor();
-    validateSize();
-    validateDescription();
-    validateQuantity();
-
-    // Check if there are any visible errors, if so, prevent form submission
-    if (error1.style.display === 'block' ||
-        error2.style.display === 'block' ||
-        error3.style.display === 'block' ||
-        error4.style.display === 'block' ||
-        error5.style.display === 'block' ||
-        error6.style.display === 'block' ||
-        error7.style.display === 'block' ||
-        error8.style.display === 'block') {
-        e.preventDefault();
-        Swal.fire({
-            icon: 'error',
-            title: 'Please correct the errors',
-            text: 'Ensure all fields are properly filled out.'
-        });
-    }
-});
-
-
 
 
 function deleteSingleImage(imageId, productId){

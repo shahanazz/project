@@ -339,6 +339,7 @@
             var totalCoupon = '<%= totalAmount[0].coupon %>';
             var salesCount = '<%= salesCount %>';
             
+            console.log('total diss----->', totalDiscount);
             $(sheet).find('row:first').after(
               '<row>' +
                 '<c r="A1" t="inlineStr"><is><t>Total Amount Generated: ₹ ' + totalAmount + '</t></is></c>' +

@@ -73,9 +73,13 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <% if (typeof message !== 'undefined') { %>
-                            <div class="alert alert-danger"><%= message %></div>
-                        <% } %>
+                        <%
+                        if(typeof message !== 'undefined'){
+                          %>
+                          <h4><%= message %> </h4>
+                          <%
+                        }
+                         %>
                         <form method="post" action="/admin/createCoupon">
 
                             <body onload="setDefaultStartDate()">
