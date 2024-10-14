@@ -1126,6 +1126,8 @@ const loadWallet = async(req,res) =>{
   try {
     const {user_id} = req.session
     const user = await User.findOne({_id:user_id})
+
+    user.walletHistory.sort((a, b) => b.date - a.date);
     
     res.render("wallet",{user})
   } catch (error) {

@@ -739,7 +739,7 @@ const cancelOrder = async (req, res) => {
             if (user) {
                 console.log('User before update:', user);
                 user.wallet += totalRefundAmount;
-                user.walletHistory.push({
+                user.walletHistory.push({  
                     date: new Date(),
                     amount: totalRefundAmount,
                     type: 'Refund',
