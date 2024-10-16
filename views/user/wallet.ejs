@@ -117,8 +117,8 @@
     <section class="product-section" id="reloadData">
       <h4>wallet balance:<strong> <%=user.wallet%></strong></h4>
       <table>
-        <% if (user.wallet !== 0) {%>
-        <thead style="font-weight: 900 ; color: black;">
+        <% if (user.walletHistory && user.walletHistory.length > 0) { %>
+        <thead style="font-weight: 900; color: black;">
           <tr>
             <th>Date</th>
             <th>Amount</th>
@@ -126,27 +126,29 @@
             <th>Description</th>
           </tr>
         </thead>
-        <tbody style="font-weight: 700; ">
-  
+        <tbody style="font-weight: 700;">
           <% user.walletHistory.forEach(function(item) { %>
           <tr>
             <td><%= item.date.toLocaleDateString() %></td>
-  
-            <% if(item.amount>0){ %>
+    
+            <% if (item.amount > 0) { %>
             <td style="color: green;"><%= item.amount %></td>
-            <% }else{%>
-            <td style="color:red;"><%= item.amount %></td>
-            <% }%>
+            <% } else { %>
+            <td style="color: red;"><%= item.amount %></td>
+            <% } %>
             <td><%= item.type %></td>
             <td><%= item.message %></td>
           </tr>
           <% }); %>
         </tbody>
       </table>
-      <%}%>
+      <% } else { %>
+      <p>No wallet history available.</p>
+      <% } %>
       <div>       
-    </div>
+      </div>
     </section>
+    
   </div>
   </div>
 
